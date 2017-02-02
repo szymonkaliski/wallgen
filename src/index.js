@@ -1,9 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+
+import Fenotype from './components/fenotype';
+
 import './index.css';
 
+const App = () => {
+  return <div>
+    <div>WallGen</div>
+    <Fenotype/>
+  </div>;
+};
+
 ReactDOM.render(
-  <App />,
+  <App/>,
   document.getElementById('root')
 );

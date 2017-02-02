@@ -6,6 +6,8 @@
     "react-scripts": "0.8.5"
   },
   "dependencies": {
+    "gl-react": "^3.0.0-alpha.2",
+    "gl-react-dom": "^3.0.0-alpha.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
