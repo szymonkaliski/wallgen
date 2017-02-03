@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Fenotype from './components/fenotype';
+import Population from './components/population';
 
 import './index.css';
 
 const App = () => {
   return <div>
     <div>WallGen</div>
-    <Fenotype/>
+    <Population/>
   </div>;
 };
 

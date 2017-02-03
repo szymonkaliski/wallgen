@@ -8,6 +8,9 @@
   "dependencies": {
     "gl-react": "^3.0.0-alpha.2",
     "gl-react-dom": "^3.0.0-alpha.2",
+    "lodash.flatten": "^4.4.0",
+    "lodash.times": "^4.3.2",
+    "random-seed": "^0.3.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
@@ -16,5 +19,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }
