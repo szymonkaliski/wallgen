@@ -3,8 +3,10 @@ import times from 'lodash.times';
 import randomSeed from 'random-seed';
 
 const GENES_COUNT = 10;
+const MUTATION_CHANCE = 0.1;
 
 const { random } = randomSeed.create();
+const chance = (percent) => random() < percent;
 
 class Genotype {
   constructor() {
@@ -27,11 +29,14 @@ class Genotype {
   }
 
   mutate() {
-    // TODO
+    // MUTATION_CHANCE that given value will be random
+    this.code = this.code.map(v => chance(MUTATION_CHANCE) ? random() : v);
   }
 
-  crossover() {
-    // TODO
+  crossover(partnerCode) {
+    // 50/50 chance that given value comes from this genotype or partner
+    // this function returns new "child"
+    return this.code.map((v, i) => chance(0.5) ? v : partnerCode[i]);
   }
 
   getCode() {
