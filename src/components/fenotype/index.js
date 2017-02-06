@@ -3,6 +3,8 @@ import React from 'react';
 import { Node, Shaders } from 'gl-react';
 import { Surface } from 'gl-react-dom';
 
+import './fenotype.css';
+
 const partition = (array, num) => {
   return array.reduce((memo, item, idx) => {
     if (idx % num === 0) {
@@ -44,7 +46,20 @@ const generateFrag = (code) => {
       ${
         colors
           .map(([x, y, distMod, h, s, v]) => {
-            return `color = mix(color, hsv2rgb(vec3(${h}, ${s}, ${v})), distance(pos, vec2(${x}, ${y})) * ${distMod});`;
+            return `color = mix(
+              color,
+              mix(
+                color,
+                hsv2rgb(vec3(${h}, ${s}, ${v})),
+                distance(pos, vec2(${x}, ${y}))
+              ),
+              ${distMod}
+            );`;
+            // return `color = mix(
+            //   color,
+            //   hsv2rgb(vec3(${h}, ${s}, ${v})),
+            //   distance(pos, vec2(${x}, ${y})) * (1.0 + ${distMod})
+            // );`;
           })
           .join('\n')
       }
@@ -54,16 +69,18 @@ const generateFrag = (code) => {
   `;
 };
 
-const Fenotype = ({ code, width = 800, height = 600 }) => {
+const Fenotype = ({ code, width = 400, height = 300 }) => {
   const frag = generateFrag(code);
   const shaders = Shaders.create({ wall: { frag } });
 
-  return <Surface width={ width } height={ height }>
-    <Node
-      shader={ shaders.wall }
-      uniforms={{ width, height }}
-    />
-  </Surface>
+  return <div className='fenotype__wrapper'>
+      <Surface width={ width } height={ height }>
+      <Node
+        shader={ shaders.wall }
+        uniforms={{ width, height }}
+      />
+    </Surface>
+  </div>;
 };
 
 export default Fenotype;

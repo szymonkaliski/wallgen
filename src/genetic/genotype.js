@@ -2,16 +2,17 @@ import flatten from 'lodash.flatten';
 import times from 'lodash.times';
 import randomSeed from 'random-seed';
 
-const GENES_COUNT = 10;
-const MUTATION_CHANCE = 0.1;
+const GENES_COUNT = 4;
+const MUTATION_CHANCE = 0.001;
 
 const { random } = randomSeed.create();
 const chance = (percent) => random() < percent;
 
 class Genotype {
-  constructor() {
-    this.code = [];
+  constructor(code = []) {
+    this.code = code;
 
+    this.fitness = 0;
     this.generate();
   }
 
@@ -36,7 +37,13 @@ class Genotype {
   crossover(partnerCode) {
     // 50/50 chance that given value comes from this genotype or partner
     // this function returns new "child"
-    return this.code.map((v, i) => chance(0.5) ? v : partnerCode[i]);
+    const childrenCode = this.code.map((v, i) => chance(0.5) ? v : partnerCode[i])
+
+    return new Genotype(childrenCode);
+  }
+
+  setFitness(fitness) {
+    this.fitness = fitness;
   }
 
   getCode() {
