@@ -69,7 +69,7 @@ const generateFrag = (code) => {
   `;
 };
 
-const Fenotype = ({ code, width = 400, height = 300 }) => {
+const Fenotype = ({ code, width = 2560 / 8, height = 1440 / 8 }) => {
   const frag = generateFrag(code);
   const shaders = Shaders.create({ wall: { frag } });
 

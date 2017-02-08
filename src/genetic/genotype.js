@@ -1,19 +1,23 @@
 import flatten from 'lodash.flatten';
-import times from 'lodash.times';
 import randomSeed from 'random-seed';
+import times from 'lodash.times';
+import uuid from 'uuid';
 
-const GENES_COUNT = 4;
+const GENES_COUNT     = 5;
 const MUTATION_CHANCE = 0.001;
 
 const { random } = randomSeed.create();
 const chance = (percent) => random() < percent;
 
 class Genotype {
-  constructor(code = []) {
-    this.code = code;
-
+  constructor(code) {
+    this.code    = code;
+    this.id      = uuid.v4();
     this.fitness = 0;
-    this.generate();
+
+    if (!this.code) {
+      this.generate();
+    }
   }
 
   generate() {
@@ -32,6 +36,8 @@ class Genotype {
   mutate() {
     // MUTATION_CHANCE that given value will be random
     this.code = this.code.map(v => chance(MUTATION_CHANCE) ? random() : v);
+
+    return this;
   }
 
   crossover(partnerCode) {
@@ -44,6 +50,8 @@ class Genotype {
 
   setFitness(fitness) {
     this.fitness = fitness;
+
+    return this;
   }
 
   getCode() {

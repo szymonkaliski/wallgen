@@ -9,10 +9,14 @@
     "gl-react": "^3.0.0-alpha.2",
     "gl-react-dom": "^3.0.0-alpha.2",
     "lodash.flatten": "^4.4.0",
+    "lodash.keyby": "^4.6.0",
+    "lodash.samplesize": "^4.2.0",
     "lodash.times": "^4.3.2",
     "random-seed": "^0.3.0",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-autobind": "^1.0.6",
+    "react-dom": "^15.4.2",
+    "uuid": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

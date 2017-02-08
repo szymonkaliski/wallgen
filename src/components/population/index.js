@@ -1,30 +1,41 @@
 import React, { Component } from 'react';
-import times from 'lodash.times';
+import autobind from 'react-autobind';
+import sampleSize from 'lodash.samplesize';
 
 import Fenotype from '../fenotype';
 import createPopulation from '../../genetic/population';
+
+import './index.css';
 
 class Population extends Component {
   constructor() {
     super();
 
+    autobind(this);
+
     const populationSize = 10000;
     this.population = createPopulation(populationSize);
 
     this.state = {
-      populationCodes: this.population.getCodes().slice(0, 12)
+      populationSample: sampleSize(this.population.getPopulation(), 12)
     };
   }
 
-  onClickFenotype(idx) {
-    this.population.setBestFit(idx);
+  onClickRandomize() {
+    this.setState({
+      populationSample: sampleSize(this.population.getPopulation(), 12)
+    });
+  }
+
+  onClickFenotype(id) {
+    this.population.setBestFit(id);
 
     let times = 0;
     let iters = 0;
     let newChildrenCount;
 
-    while (!(times >= 1 || iters > 10000)) {
-      newChildrenCount = this.population.evolve(100);
+    while (!(times >= 1 || iters >= 100)) {
+      newChildrenCount = this.population.evolve();
 
       iters++;
 
@@ -37,23 +48,23 @@ class Population extends Component {
       }
     }
 
-    console.log("final iters: ", iters, this.population.lastBestFit);
+    console.log("final iters: ", iters, this.population.lastBestFit, newChildrenCount);
 
     this.setState({
-      populationCodes: this.population.getCodes().slice(newChildrenCount, newChildrenCount + 12)
+      populationSample: this.population.getPopulation().slice(0, 12)
     });
   }
 
   render() {
     return <div>
       {
-        this.state.populationCodes.map((code, i) => {
-          return <div key={i} onClick={() => this.onClickFenotype(i)} style={{ display: 'inline-block' }}>
-            {i}
+        this.state.populationSample.map(({ code, id }, i) => {
+          return <div className='fenotype__wrapper' key={i} onClick={() => this.onClickFenotype(id)}>
             <Fenotype code={code}/>
           </div>;
         })
       }
+      <div onClick={this.onClickRandomize}>randomize</div>
     </div>;
   }
 };
