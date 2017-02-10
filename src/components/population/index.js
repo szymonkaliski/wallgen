@@ -13,7 +13,7 @@ class Population extends Component {
 
     autobind(this);
 
-    const populationSize = 10000;
+    const populationSize = 5000;
     this.population = createPopulation(populationSize);
 
     this.state = {
@@ -29,26 +29,7 @@ class Population extends Component {
 
   onClickPhenotype(id) {
     this.population.setBestFit(id);
-
-    let times = 0;
-    let iters = 0;
-    let newChildrenCount;
-
-    while (!(times >= 1 || iters >= 100)) {
-      newChildrenCount = this.population.evolve();
-
-      iters++;
-
-      if (newChildrenCount > 0) {
-        times++;
-      }
-
-      if (iters % 10 === 0) {
-        console.log("iters: ", iters, times, this.population.lastBestFit);
-      }
-    }
-
-    console.log("final iters: ", iters, this.population.lastBestFit, newChildrenCount);
+    this.population.evolve();
 
     this.setState({
       populationSample: this.population.getPopulation().slice(0, 12)

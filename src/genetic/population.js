@@ -1,9 +1,10 @@
 import keyBy from 'lodash.keyby';
+import randomSeed from 'random-seed';
 import times from 'lodash.times';
 
 import createGenotype from './genotype';
 
-const MAX_BEST_FITS = 3;
+const MAX_BEST_FITS = 10;
 
 const dist = (xs, ys) => {
   return Math.sqrt(xs
@@ -15,6 +16,28 @@ const calculateFitness = (genotype, bestFits) => {
   return bestFits
     .map(bestFit => dist(bestFit.getCode(), genotype.getCode()))
     .reduce((acc, dist) => acc + dist, 0) / bestFits.length;
+};
+
+const prop = (key) => (obj) => obj[key];
+
+const { random } = randomSeed.create();
+
+const rouletteIdx = (normalizedFitnesses, sumFitnesses) => {
+  const value = random() * sumFitnesses;
+
+  return normalizedFitnesses.reduce((acc, fitness, idx) => {
+    if (!acc.idx) {
+      const newValue = acc.value - fitness;
+
+      return {
+        value: newValue,
+        idx:   newValue <= 0 ? idx : acc.idx
+      };
+    }
+    else {
+      return acc;
+    }
+  }, { value, idx: undefined }).idx;
 };
 
 class Population {
@@ -38,31 +61,43 @@ class Population {
     this.bestFits = [ bestFit, ...this.bestFits ].slice(0, MAX_BEST_FITS);
   }
 
-  evolve(times) {
-    // add fitnesses to population
+  evolve() {
+    let newPopulation = [];
+
+    // add fitnesses to population (the smaller the better)
     this.population.forEach(genotype => genotype.setFitness(calculateFitness(genotype, this.bestFits)));
 
-    // mutate every one
-    this.population.forEach(genotype => genotype.mutate());
+    // normalize and sum fitnesses
+    const maxFitnesses        = Math.max(...this.population.map(prop('fitness')));
+    const normalizedFitnesses = this.population.map(({ fitness }) => 1 - fitness / maxFitnesses);
+    const sumFitnesses        = normalizedFitnesses.reduce((acc, fitness) => acc + fitness, 0);
 
-    // sort population by fitness (closer to 0 is better)
-    this.population = this.population.sort((a, b) => a.fitness - b.fitness);
+    // roulette
+    while (newPopulation.length < this.population.length) {
+      const parentAIdx = rouletteIdx(normalizedFitnesses, sumFitnesses);
+      const parentBIdx = rouletteIdx(normalizedFitnesses, sumFitnesses);
 
-    // new children
-    const children = this.population.slice(1, this.population.length - 1)
-      .filter(genotype => genotype.fitness <= this.lastBestFit * 1.2)
-      .map(genotype => this.bestFits[0].crossover(genotype.getCode()));
+      const parentA    = this.population[parentAIdx];
+      const parentB    = this.population[parentBIdx];
 
-    // save best fit - population[1] not [0] because we want nearest generated, not the chosen one
-    this.lastBestFit = Math.min(this.lastBestFit, this.population[1].fitness);
+      if (parentAIdx !== parentBIdx) {
+        const child = parentA.crossover(parentB);
 
-    // add children to population and remove worst-fit
-    this.population = [
-      ...children.map(genotype => genotype.setFitness(calculateFitness(genotype, this.bestFits))),
-      ...this.population.slice(0, this.population.length - children.length)
-    ].sort((a, b) => a.fitness - b.fitness);
+        // mutate and re-calculate fitness
+        child.mutate();
+        child.setFitness(calculateFitness(child, this.bestFits));
 
-    return children.length;
+        newPopulation.push(child);
+      }
+      else {
+        // in rare chance both random idxs are the same
+        // just let the parent live for next iteration
+        newPopulation.push(parentA);
+      }
+    }
+
+    // new population sorted by fitness (again, smaller is better)
+    this.population = newPopulation.sort((a, b) => a.fitness - b.fitness);
   }
 }
 
