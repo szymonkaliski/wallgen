@@ -3,7 +3,7 @@ import React from 'react';
 import { Node, Shaders } from 'gl-react';
 import { Surface } from 'gl-react-dom';
 
-import './fenotype.css';
+import './phenotype.css';
 
 const partition = (array, num) => {
   return array.reduce((memo, item, idx) => {
@@ -69,11 +69,11 @@ const generateFrag = (code) => {
   `;
 };
 
-const Fenotype = ({ code, width = 2560 / 8, height = 1440 / 8 }) => {
+const Phenotype = ({ code, width = 2560 / 8, height = 1440 / 8 }) => {
   const frag = generateFrag(code);
   const shaders = Shaders.create({ wall: { frag } });
 
-  return <div className='fenotype__wrapper'>
+  return <div className='phenotype__wrapper'>
       <Surface width={ width } height={ height }>
       <Node
         shader={ shaders.wall }
@@ -83,4 +83,4 @@ const Fenotype = ({ code, width = 2560 / 8, height = 1440 / 8 }) => {
   </div>;
 };
 
-export default Fenotype;
+export default Phenotype;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import autobind from 'react-autobind';
 import sampleSize from 'lodash.samplesize';
 
-import Fenotype from '../fenotype';
+import Phenotype from '../phenotype';
 import createPopulation from '../../genetic/population';
 
 import './index.css';
@@ -27,7 +27,7 @@ class Population extends Component {
     });
   }
 
-  onClickFenotype(id) {
+  onClickPhenotype(id) {
     this.population.setBestFit(id);
 
     let times = 0;
@@ -59,8 +59,8 @@ class Population extends Component {
     return <div>
       {
         this.state.populationSample.map(({ code, id }, i) => {
-          return <div className='fenotype__wrapper' key={i} onClick={() => this.onClickFenotype(id)}>
-            <Fenotype code={code}/>
+          return <div className='phenotype__wrapper' key={i} onClick={() => this.onClickPhenotype(id)}>
+            <Phenotype code={code}/>
           </div>;
         })
       }
