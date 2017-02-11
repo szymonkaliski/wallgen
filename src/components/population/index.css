@@ -1,6 +1,3 @@
-.phenotype__wrapper {
-  display: inline-block;
-  margin: 4px;
-  padding: 0;
-  cursor: pointer;
+.w-120px {
+  width: 120px;
 }

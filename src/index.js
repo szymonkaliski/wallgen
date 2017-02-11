@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 
 import Population from './components/population';
 
-import './index.css';
+import 'tachyons/css/tachyons.css';
 
 const App = () => {
-  return <div>
+  return <div className='fl w-100 pa2'>
     <Population/>
   </div>;
 };

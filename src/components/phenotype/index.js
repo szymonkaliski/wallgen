@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
+import autobind from 'react-autobind';
+import debounce from 'lodash.debounce';
 
 import { Node, Shaders } from 'gl-react';
 import { Surface } from 'gl-react-dom';
 
-import './phenotype.css';
+import './index.css';
+
+const { floor } = Math;
 
 const partition = (array, num) => {
   return array.reduce((memo, item, idx) => {
@@ -55,11 +59,6 @@ const generateFrag = (code) => {
               ),
               ${distMod}
             );`;
-            // return `color = mix(
-            //   color,
-            //   hsv2rgb(vec3(${h}, ${s}, ${v})),
-            //   distance(pos, vec2(${x}, ${y})) * (1.0 + ${distMod})
-            // );`;
           })
           .join('\n')
       }
@@ -69,18 +68,76 @@ const generateFrag = (code) => {
   `;
 };
 
-const Phenotype = ({ code, width = 2560 / 8, height = 1440 / 8 }) => {
-  const frag = generateFrag(code);
-  const shaders = Shaders.create({ wall: { frag } });
+class Phenotype extends Component {
+  constructor() {
+    super();
 
-  return <div className='phenotype__wrapper'>
-      <Surface width={ width } height={ height }>
+    autobind(this);
+
+    this.state = {
+      width:        0,
+      height:       0,
+      shaderWidth:  0,
+      shaderHeight: 0
+    };
+
+    this.onResize = debounce(this.onResize, 20);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUmount() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  onResize() {
+    const { width } = this.wrapperRef.getBoundingClientRect();
+    const { aspect } = this.props;
+
+    const shaderWidth = floor(width) - 16;
+
+    this.setState({
+      shaderWidth,
+      shaderHeight: floor((1 / aspect) * width) - 16,
+
+      width: floor(width),
+      height: floor((1 / aspect) * width)
+    });
+  }
+
+  onRef(ref) {
+    this.wrapperRef = ref;
+    this.onResize();
+  }
+
+  renderSurface() {
+    const { code } = this.props;
+
+    const { shaderWidth, shaderHeight } = this.state;
+
+    const frag    = generateFrag(code);
+    const shaders = Shaders.create({ wall: { frag } });
+
+    return <Surface width={ shaderWidth } height={ shaderHeight } className='ma--surface'>
       <Node
         shader={ shaders.wall }
-        uniforms={{ width, height }}
+        uniforms={{ width: shaderWidth, height: shaderHeight }}
       />
-    </Surface>
-  </div>;
-};
+    </Surface>;
+  }
+
+  render() {
+    const { width, height } = this.state;
+
+    return <div ref={this.onRef} className='ba b--black-10 br2 link pointer no-underline b--hover-black-50 hide-child relative'>
+      { width !== 0 && height !== 0 && this.renderSurface() }
+      <div className='child white bg-black-40 absolute absolute--fill'>
+        <div className='center--transform w-100 tc'>Click to Evolve</div>
+      </div>
+    </div>;
+  }
+}
 
 export default Phenotype;
