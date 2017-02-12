@@ -131,9 +131,9 @@ class Phenotype extends Component {
   render() {
     const { width, height } = this.state;
 
-    return <div ref={this.onRef} className='ba b--black-10 br2 link pointer no-underline b--hover-black-50 hide-child relative'>
+    return <div ref={ this.onRef } className='ba b--black-10 br2 link pointer no-underline hide-child relative'>
       { width !== 0 && height !== 0 && this.renderSurface() }
-      <div className='child white bg-black-40 absolute absolute--fill'>
+      <div className='child white bg-black-20 absolute absolute--fill'>
         <div className='center--transform w-100 tc'>Click to Evolve</div>
       </div>
     </div>;
