@@ -93,16 +93,19 @@ class Phenotype extends Component {
   }
 
   onResize() {
-    const { width } = this.wrapperRef.getBoundingClientRect();
-    const { aspect } = this.props;
+    const rect = this.wrapperRef ? this.wrapperRef.getBoundingClientRect() : undefined;
 
+    if (!rect) { return; }
+
+    const { width }   = rect;
+    const { aspect }  = this.props;
     const shaderWidth = floor(width) - 16;
 
     this.setState({
       shaderWidth,
       shaderHeight: floor((1 / aspect) * width) - 16,
 
-      width: floor(width),
+      width:  floor(width),
       height: floor((1 / aspect) * width)
     });
   }

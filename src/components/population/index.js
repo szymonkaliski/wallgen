@@ -47,8 +47,10 @@ class Population extends Component {
       <div className='mw9 center ph3-ns'>
         <div className='cf ph2-ns'>
         {
-          population.slice(offset, offset + DISPLAY_PER_PAGE).map((genotype, i) => {
-            return <div className='fl w-100 w-third-ns pa2' key={i} onClick={() => this.onClickPhenotype(genotype.get('id'))}>
+          population.slice(offset, offset + DISPLAY_PER_PAGE).map(genotype => {
+            const id = genotype.get('id');
+
+            return <div className='fl w-100 w-third-ns pa2' key={id} onClick={() => this.onClickPhenotype(id)}>
               <Phenotype code={genotype.get('code').toJS()} aspect={16/9}/>
             </div>;
           })

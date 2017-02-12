@@ -7,6 +7,7 @@ import {
 } from '../genetic/population';
 
 const POPULATION_SIZE = 1200;
+const HISTORY_SIZE = 4;
 
 const initialState = fromJS({
   history:    [],
@@ -15,8 +16,13 @@ const initialState = fromJS({
 
 export default (state = initialState, action) => {
   if (action.type === 'EVOLVE_GENOTYPE') {
-    state = state.update('history', history => history.push(getGenotype(state.get('population'), action.id)));
-    state = state.set('population', evolvePopulation(state.get('population'), state.get('history')));
+    state = state.update('history', history => history
+      .unshift(getGenotype(state.get('population'), action.id))
+      .setSize(Math.min(HISTORY_SIZE, history.count() + 1)));
+
+    state = state.set('population', evolvePopulation(
+      state.get('population'),
+      state.get('history')));
   }
 
   return state;
