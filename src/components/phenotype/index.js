@@ -5,8 +5,6 @@ import debounce from 'lodash.debounce';
 import { Node, Shaders } from 'gl-react';
 import { Surface } from 'gl-react-dom';
 
-import './index.css';
-
 const { floor } = Math;
 
 const partition = (array, num) => {
@@ -75,10 +73,8 @@ class Phenotype extends Component {
     autobind(this);
 
     this.state = {
-      width:        0,
-      height:       0,
-      shaderWidth:  0,
-      shaderHeight: 0
+      width:  0,
+      height: 0,
     };
 
     this.onResize = debounce(this.onResize, 20);
@@ -97,36 +93,47 @@ class Phenotype extends Component {
 
     if (!rect) { return; }
 
-    const { width }   = rect;
-    const { aspect }  = this.props;
-    const shaderWidth = floor(width) - 16;
+    const width      = this.props.width || rect.width;
+    const { aspect } = this.props;
 
     this.setState({
-      shaderWidth,
-      shaderHeight: floor((1 / aspect) * width) - 16,
-
       width:  floor(width),
       height: floor((1 / aspect) * width)
     });
   }
 
-  onRef(ref) {
+  onWrapperRef(ref) {
     this.wrapperRef = ref;
     this.onResize();
+  }
+
+  onSurfaceRef(ref) {
+    this.surfaceRef = ref;
+  }
+
+  onSurfaceLoad() {
+    if (this.props.onSurfaceLoad) {
+      this.props.onSurfaceLoad(this.surfaceRef);
+    }
   }
 
   renderSurface() {
     const { code } = this.props;
 
-    const { shaderWidth, shaderHeight } = this.state;
+    const { width, height } = this.state;
 
     const frag    = generateFrag(code);
     const shaders = Shaders.create({ wall: { frag } });
 
-    return <Surface width={ shaderWidth } height={ shaderHeight } className='ma--surface'>
+    return <Surface
+      width={ width }
+      height={ height }
+      webglContextAttributes={{ preserveDrawingBuffer: true }}
+      ref={ this.onSurfaceRef }
+      onLoad={ this.onSurfaceLoad }>
       <Node
         shader={ shaders.wall }
-        uniforms={{ width: shaderWidth, height: shaderHeight }}
+        uniforms={{ width, height }}
       />
     </Surface>;
   }
@@ -134,11 +141,8 @@ class Phenotype extends Component {
   render() {
     const { width, height } = this.state;
 
-    return <div ref={ this.onRef } className='ba b--black-10 br2 link pointer no-underline hide-child relative'>
+    return <div ref={ this.onWrapperRef }>
       { width !== 0 && height !== 0 && this.renderSurface() }
-      <div className='child white bg-black-20 absolute absolute--fill'>
-        <div className='center--transform w-100 tc'>Click to Evolve</div>
-      </div>
     </div>;
   }
 }

@@ -8,8 +8,10 @@ import appStore from './reducers';
 
 import Population from './components/population';
 import History from './components/history';
+import DownloadRender from './components/download-render';
 
 import 'tachyons/css/tachyons.css';
+import './index.css';
 
 const store = createStore(appStore);
 
@@ -17,6 +19,7 @@ const App = () => {
   return <div className='w-100'>
     <History/>
     <Population/>
+    <DownloadRender/>
   </div>;
 };
 

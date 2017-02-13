@@ -11,6 +11,7 @@ const HISTORY_SIZE = 4;
 
 const initialState = fromJS({
   history:    [],
+  download:   undefined,
   population: createPopulation(POPULATION_SIZE)
 });
 
@@ -23,6 +24,14 @@ export default (state = initialState, action) => {
     state = state.set('population', evolvePopulation(
       state.get('population'),
       state.get('history')));
+  }
+
+  if (action.type === 'DOWNLOAD_PHENOTYPE') {
+    state = state.set('download', getGenotype(state.get('population'), action.id));
+  }
+
+  if (action.type === 'DOWNLOAD_PHENOTYPE_DONE') {
+    state = state.set('download', undefined);
   }
 
   return state;
