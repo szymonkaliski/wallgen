@@ -2,13 +2,22 @@
   width: 120px;
 }
 
-.center--transform {
+.absolute--center {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
+/* https://stackoverflow.com/questions/31109299/css-transform-translate-50-50-makes-texts-blurry */
+.absolute--center--children-fix {
+  transform: translateZ(0);
+}
+
 .invisible {
   display: none;
+}
+
+.bg-black-a80 {
+  background-color: rgba(0, 0, 0, 0.8);
 }

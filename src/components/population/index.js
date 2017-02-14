@@ -61,7 +61,7 @@ class Population extends Component {
                   <Phenotype code={genotype.get('code').toJS()} aspect={16/9}/>
 
                   <div className='child white bg-black-20 absolute absolute--fill'>
-                    <div className='center--transform'>Click to Evolve</div>
+                    <div className='absolute--center'>Click to Evolve</div>
                   </div>
                 </div>
 
