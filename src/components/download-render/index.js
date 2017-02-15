@@ -44,6 +44,8 @@ class DownloadRender extends Component {
     const { download } = this.props;
     const dataUrl      = ref.captureAsDataURL('png', 1.0);
 
+    console.log('onsurfaceload');
+
     downloadUrl(dataUrl, `wallgen-${download.get('id')}.png`);
     this.props.downloadPhenotypeDone();
   }
@@ -57,17 +59,16 @@ class DownloadRender extends Component {
   }
 
   renderModal() {
-    const { download } = this.props;
+    const { download, aspectRatio } = this.props;
 
-    // TODO: how to set width here?
-    const width  = 512;
-    const aspect = 16/9;
+    // TODO: set nice width for preview image
+    const width = 512;
 
     return <Modal open onRequestClose={this.props.downloadPhenotypeDone}>
       <div className='mb2'>
         <Phenotype
           width={width}
-          aspect={aspect}
+          aspect={aspectRatio}
           code={download.get('code').toJS()}
         />
       </div>
@@ -75,9 +76,9 @@ class DownloadRender extends Component {
       <div className='tc'>
         <select className='mb2'>
           {
-            WIDTHS[aspect].map(width => (
+            WIDTHS[aspectRatio].map(width => (
               <option key={width} onChange={() => this.onSelectWidth(width)}>
-                { width } x { round(width * (1 / aspect)) }
+                { width } x { round(width * (1 / aspectRatio)) }
               </option>
             ))
           }
@@ -95,21 +96,17 @@ class DownloadRender extends Component {
   }
 
   render() {
-    const { download }       = this.props;
-    const { shouldDownload } = this.state;
+    const { download, aspectRatio }         = this.props;
+    const { shouldDownload, selectedWidth } = this.state;
 
     if (!download) { return null; }
 
     if (!shouldDownload) { return this.renderModal(); }
 
-    // TODO
-    const width  = 2560;
-    const aspect = 16/9;
-
     return <div className='invisible'>
       <Phenotype
-        width={width}
-        aspect={aspect}
+        width={selectedWidth}
+        aspect={aspectRatio}
         onSurfaceLoad={this.onSurfaceLoad}
         code={download.get('code').toJS()}/>
     </div>;
@@ -117,11 +114,12 @@ class DownloadRender extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  download: state.get('download')
+  download:    state.get('download'),
+  aspectRatio: state.get('aspectRatio')
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  downloadPhenotypeDone,
+  downloadPhenotypeDone
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DownloadRender);

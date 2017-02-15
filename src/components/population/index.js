@@ -36,6 +36,12 @@ class Population extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.population.equals(this.props.population)) {
+      this.setState({ offset: 0 });
+    }
+  }
+
   onClickPhenotype(id) {
     this.props.evolveGenotype(id);
   }
@@ -45,8 +51,8 @@ class Population extends Component {
   }
 
   render() {
-    const { population } = this.props;
-    const { offset }     = this.state;
+    const { population, aspectRatio } = this.props;
+    const { offset }                  = this.state;
 
     return <div>
       <div className='mw9 center pb3'>
@@ -58,7 +64,7 @@ class Population extends Component {
             return <div className='fl w-100 w-third-ns pa2' key={id}>
               <div className='ba b--black-10 br2'>
                 <div className='pa2 link pointer no-underline hide-child relative' onClick={() => this.onClickPhenotype(id)}>
-                  <Phenotype code={genotype.get('code').toJS()} aspect={16/9}/>
+                  <Phenotype code={genotype.get('code').toJS()} aspect={aspectRatio}/>
 
                   <div className='child white bg-black-20 absolute absolute--fill'>
                     <div className='absolute--center'>Click to Evolve</div>
@@ -85,7 +91,8 @@ class Population extends Component {
 };
 
 const mapStateToProps = (state) => ({
-  population: state.get('population')
+  population:  state.get('population'),
+  aspectRatio: state.get('aspectRatio')
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

@@ -72,10 +72,7 @@ class Phenotype extends Component {
 
     autobind(this);
 
-    this.state = {
-      width:  0,
-      height: 0,
-    };
+    this.state = { width: 0 };
 
     this.onResize = debounce(this.onResize, 20);
   }
@@ -93,12 +90,10 @@ class Phenotype extends Component {
 
     if (!rect) { return; }
 
-    const width      = this.props.width || rect.width;
-    const { aspect } = this.props;
+    const width = this.props.width || rect.width;
 
     this.setState({
-      width:  floor(width),
-      height: floor((1 / aspect) * width)
+      width: floor(width)
     });
   }
 
@@ -118,10 +113,11 @@ class Phenotype extends Component {
   }
 
   renderSurface() {
-    const { code } = this.props;
+    const { code, aspect } = this.props;
+    const { width }        = this.state;
 
-    const { width, height } = this.state;
-
+    // TODO: offset/center, height should be max(height, width)
+    const height  = floor((1 / aspect) * width)
     const frag    = generateFrag(code);
     const shaders = Shaders.create({ wall: { frag } });
 
@@ -139,10 +135,10 @@ class Phenotype extends Component {
   }
 
   render() {
-    const { width, height } = this.state;
+    const { width } = this.state;
 
     return <div ref={ this.onWrapperRef }>
-      { width !== 0 && height !== 0 && this.renderSurface() }
+      { width !== 0 && this.renderSurface() }
     </div>;
   }
 }

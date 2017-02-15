@@ -6,9 +6,10 @@ import { createStore } from 'redux';
 
 import appStore from './reducers';
 
-import Population from './components/population';
-import History from './components/history';
 import DownloadRender from './components/download-render';
+import History from './components/history';
+import Navbar from './components/navbar';
+import Population from './components/population';
 
 import 'tachyons/css/tachyons.css';
 import './index.css';
@@ -17,6 +18,7 @@ const store = createStore(appStore);
 
 const App = () => {
   return <div className='w-100'>
+    <Navbar/>
     <History/>
     <Population/>
     <DownloadRender/>

@@ -10,9 +10,10 @@ const POPULATION_SIZE = 1200;
 const HISTORY_SIZE = 4;
 
 const initialState = fromJS({
-  history:    [],
-  download:   undefined,
-  population: createPopulation(POPULATION_SIZE)
+  history:     [],
+  download:    undefined,
+  population:  createPopulation(POPULATION_SIZE),
+  aspectRatio: 16/9
 });
 
 export default (state = initialState, action) => {
@@ -32,6 +33,10 @@ export default (state = initialState, action) => {
 
   if (action.type === 'DOWNLOAD_PHENOTYPE_DONE') {
     state = state.set('download', undefined);
+  }
+
+  if (action.type === 'SET_ASPECT_RATIO') {
+    state = state.set('aspectRatio', action.aspectRatio);
   }
 
   return state;
