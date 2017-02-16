@@ -24,8 +24,8 @@ export default class Modal extends Component {
       e.stopPropagation();
     }
 
-    return <div className='fixed absolute--fill bg-black-a80' onClick={this.onRequestClose}>
-      <div className='absolute--center light-gray' onClick={stopEvent}>
+    return <div className='fixed absolute--fill bg-black-a80' onClick={ this.onRequestClose }>
+      <div className='absolute--center light-gray' onClick={ stopEvent }>
         <div className='absolute--center--children-fix'>
           { this.props.children }
         </div>

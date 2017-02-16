@@ -44,14 +44,16 @@ class DownloadRender extends Component {
     const { download } = this.props;
     const dataUrl      = ref.captureAsDataURL('png', 1.0);
 
-    console.log('onsurfaceload');
-
     downloadUrl(dataUrl, `wallgen-${download.get('id')}.png`);
-    this.props.downloadPhenotypeDone();
+
+    this.setState({
+      shouldDownload: false,
+      selectedWidth:  undefined
+    }, this.props.downloadPhenotypeDone);
   }
 
-  onSelectWidth(width) {
-    this.setState({ selectedWidth: width });
+  onSelectWidth(event) {
+    this.setState({ selectedWidth: event.target.value });
   }
 
   onClickDownload() {
@@ -67,17 +69,17 @@ class DownloadRender extends Component {
     return <Modal open onRequestClose={this.props.downloadPhenotypeDone}>
       <div className='mb2'>
         <Phenotype
-          width={width}
-          aspect={aspectRatio}
-          code={download.get('code').toJS()}
+          width={ width }
+          aspect={ aspectRatio }
+          code={ download.get('code') }
         />
       </div>
 
       <div className='tc'>
-        <select className='mb2'>
+        <select className='mb2' onChange={this.onSelectWidth}>
           {
             WIDTHS[aspectRatio].map(width => (
-              <option key={width} onChange={() => this.onSelectWidth(width)}>
+              <option key={ width } value={ width }>
                 { width } x { round(width * (1 / aspectRatio)) }
               </option>
             ))
@@ -86,7 +88,7 @@ class DownloadRender extends Component {
 
         <div className='tc'>
           <div
-            onClick={this.onClickDownload}
+            onClick={ this.onClickDownload }
             className='dib w-120px pa2 tc pointer bg-animate hover-white hover-bg-black ba border-box'>
             Download
           </div>
@@ -105,10 +107,10 @@ class DownloadRender extends Component {
 
     return <div className='invisible'>
       <Phenotype
-        width={selectedWidth}
-        aspect={aspectRatio}
-        onSurfaceLoad={this.onSurfaceLoad}
-        code={download.get('code').toJS()}/>
+        width={ selectedWidth }
+        aspect={ aspectRatio }
+        onSurfaceLoad={ this.onSurfaceLoad }
+        code={ download.get('code') }/>
     </div>;
   }
 }

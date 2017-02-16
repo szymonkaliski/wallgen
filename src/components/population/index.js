@@ -57,34 +57,34 @@ class Population extends Component {
     return <div>
       <div className='mw9 center pb3'>
         <div className='cf'>
-        {
-          population.slice(offset, offset + DISPLAY_PER_PAGE).map(genotype => {
-            const id = genotype.get('id');
+          {
+            population.slice(offset, offset + DISPLAY_PER_PAGE).map((genotype, i) => {
+              const id = genotype.get('id');
 
-            return <div className='fl w-100 w-third-ns pa2' key={id}>
-              <div className='ba b--black-10 br2'>
-                <div className='pa2 link pointer no-underline hide-child relative' onClick={() => this.onClickPhenotype(id)}>
-                  <Phenotype code={genotype.get('code').toJS()} aspect={aspectRatio}/>
+              return <div className='fl w-100 w-third-ns pa2' key={i}>
+                <div className='ba b--black-10 br2'>
+                  <div className='pa2 link pointer no-underline hide-child relative' onClick={ () => this.onClickPhenotype(id) }>
+                    <Phenotype key={ i } code={ genotype.get('code') } aspect={ aspectRatio }/>
 
-                  <div className='child white bg-black-20 absolute absolute--fill'>
-                    <div className='absolute--center'>Click to Evolve</div>
+                    <div className='child white bg-black-20 absolute absolute--fill'>
+                      <div className='absolute--center'>Click to Evolve</div>
+                    </div>
+                  </div>
+
+                  <div className='pa2 bt b--black-10 link pointer dim' onClick={ () => this.downloadPhenotype(id) }>
+                    <div className='f6 tc mid-gray'>Download</div>
                   </div>
                 </div>
-
-                <div className='pa2 bt b--black-10 link pointer dim' onClick={() => this.downloadPhenotype(id)}>
-                  <div className='f6 tc mid-gray'>Download</div>
-                </div>
-              </div>
-            </div>;
-          })
-        }
+              </div>;
+            })
+          }
         </div>
       </div>
 
       <div className='flex items-center justify-center pb3'>
-        <div className='w-120px pa2 tc pointer bg-animate hover-white hover-bg-black ba border-box' onClick={() => this.onClickMoveOffset(-1)}>Previous</div>
+        <div className='w-120px pa2 tc pointer bg-animate hover-white hover-bg-black ba border-box' onClick={ () => this.onClickMoveOffset(-1) }>Previous</div>
         <div className='w-120px pa2 tc'>{ round(offset / DISPLAY_PER_PAGE) + 1 } / { round(population.count() / DISPLAY_PER_PAGE) }</div>
-        <div className='w-120px pa2 tc pointer bg-animate hover-white hover-bg-black ba border-box' onClick={() => this.onClickMoveOffset(+1)}>Next</div>
+        <div className='w-120px pa2 tc pointer bg-animate hover-white hover-bg-black ba border-box' onClick={ () => this.onClickMoveOffset(+1) }>Next</div>
       </div>
     </div>;
   }
