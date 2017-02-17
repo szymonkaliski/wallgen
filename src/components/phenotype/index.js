@@ -76,29 +76,30 @@ class Phenotype extends Component {
     window.removeEventListener('resize', this.onResize);
   }
 
-  // TODO: what if new code appears before last one stops?
+  updateLoop() {
+    const eps = 0.01;
+    const k   = 0.98;
+
+    const code = this.state.code.map((v, i) => {
+      const dist = abs(v - this.props.code.get(i));
+
+      return dist < eps ? this.props.code.get(i) : k * v + (1 - k) * this.props.code.get(i);
+    });
+
+    this.setState({ code });
+
+    if (!code.equals(this.props.code)) {
+      this.rafHandle = raf(this.updateLoop);
+    }
+    else {
+      raf.cancel(this.rafHandle);
+      this.rafHandle = undefined;
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    const nextCode = nextProps.code;
-
-    if (!nextCode.equals(this.state.code)) {
-      const eps = 0.01;
-      const k   = 0.98;
-
-      const morphArrays = () => {
-        const code = this.state.code.map((v, i) => {
-          const dist = abs(v - nextCode.get(i));
-
-          return dist < eps ? nextCode.get(i) : k * v + (1 - k) * nextCode.get(i);
-        });
-
-        this.setState({ code });
-
-        if (!code.equals(nextCode)) {
-          raf(morphArrays);
-        }
-      }
-
-      raf(morphArrays);
+    if (!nextProps.code.equals(this.state.code) && !this.rafHandle) {
+      this.rafHandle = raf(this.updateLoop);
     }
   }
 
@@ -154,7 +155,6 @@ class Phenotype extends Component {
   }
 
   render() {
-    const { aspect }      = this.props;
     const { width, code } = this.state;
 
     return <div ref={ this.onWrapperRef }>
