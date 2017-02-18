@@ -4,8 +4,7 @@ import times from 'lodash.times';
 import uuid from 'uuid';
 import { fromJS } from 'immutable';
 
-const GENES_COUNT     = 4;
-const MUTATION_CHANCE = 0.001;
+import { GENES_COUNT, MUTATION_CHANCE } from '../constants';
 
 const { random } = randomSeed.create();
 const chance = (percent) => random() < percent;

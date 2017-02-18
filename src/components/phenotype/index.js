@@ -6,12 +6,11 @@ import raf from 'raf';
 import { Node, Shaders } from 'gl-react';
 import { Surface } from 'gl-react-dom';
 
+import { GENES_COUNT } from '../../constants';
+
 const { abs, floor } = Math;
 
 const calculateHeight = (width, aspect) => floor((1 / aspect) * width);
-
-// TODO: move constants to another file
-const GENES_COUNT = 4;
 
 const frag = `
   precision mediump float;
@@ -131,27 +130,40 @@ class Phenotype extends Component {
   }
 
   renderSurface() {
-    const { aspect }      = this.props;
-    const { code, width } = this.state;
+    const { aspect, forceExactSize } = this.props;
+    const { code, width }            = this.state;
 
-    // TODO: offset/center, height should be max(height, width)
     const height = calculateHeight(width, aspect);
 
-    return <Surface
-      width={ width }
-      height={ height }
-      webglContextAttributes={{ preserveDrawingBuffer: true }}
-      ref={ this.onSurfaceRef }
-      onLoad={ this.onSurfaceLoad }>
-      <Node
-        shader={ shaders.wall }
-        uniforms={{
-          width,
-          height,
-          code: code.toJS()
-        }}
-      />
-    </Surface>;
+    let shaderWidth  = width;
+    let shaderHeight = height;
+    let paddingTop   = 0;
+    let paddingLeft  = 0;
+
+    if (!forceExactSize) {
+      shaderWidth  = aspect > 1 ? width : width * aspect;
+      shaderHeight = aspect > 1 ? height : width;
+      paddingLeft  = (width - shaderWidth) / 2;
+      paddingTop   = (width - shaderHeight) / 2;
+    }
+
+    return <div style={{ paddingLeft, paddingTop, width, height: forceExactSize ? height : width }}>
+      <Surface
+        width={ shaderWidth }
+        height={ shaderHeight }
+        webglContextAttributes={{ preserveDrawingBuffer: true }}
+        ref={ this.onSurfaceRef }
+        onLoad={ this.onSurfaceLoad }>
+        <Node
+          shader={ shaders.wall }
+          uniforms={{
+            width:  shaderWidth,
+            height: shaderHeight,
+            code:   code.toJS()
+          }}
+        />
+      </Surface>
+    </div>;
   }
 
   render() {

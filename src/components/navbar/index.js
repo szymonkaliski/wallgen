@@ -4,13 +4,7 @@ import { connect } from 'react-redux';
 
 import { setAspectRatio } from '../../actions';
 
-const ASPECT_RATIOS = [
-  [ "4/3",   "desktop", 4/3   ],
-  [ "16/9",  "desktop", 16/9  ],
-  [ "16/10", "desktop", 16/10 ],
-  [ "9/16",  "phone",   9/16  ],
-  [ "3/4",   "tablet",  3/4   ]
-];
+import { ASPECT_RATIOS } from '../../constants';
 
 const Navbar = ({ aspectRatio, setAspectRatio }) => {
   return <div className='w-100 light-gray bg-black-80 pa2 mb4'>

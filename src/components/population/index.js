@@ -10,9 +10,9 @@ import {
 
 import Phenotype from '../phenotype';
 
-const { round } = Math;
+import { DISPLAY_PER_PAGE } from '../../constants';
 
-const DISPLAY_PER_PAGE = 12;
+const { round } = Math;
 
 class Population extends Component {
   constructor() {

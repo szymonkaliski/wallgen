@@ -9,7 +9,7 @@ const History = ({ history }) => {
       <div className='cf ph2-ns'>
         {
           history.map((genotype, i) => {
-            return <div className='fl w-100 w-25-ns pa2' key={ i }>
+            return <div className='fl w-100 w-third-ns pa2' key={ i }>
               <Phenotype code={ genotype.get('code') } aspect={ 16/9 }/>
             </div>;
           })

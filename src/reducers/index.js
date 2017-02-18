@@ -6,8 +6,7 @@ import {
   getGenotype
 } from '../genetic/population';
 
-const POPULATION_SIZE = 1200;
-const HISTORY_SIZE = 4;
+import { POPULATION_SIZE, HISTORY_SIZE } from '../constants';
 
 const initialState = fromJS({
   history:     [],

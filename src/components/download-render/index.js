@@ -8,6 +8,8 @@ import { downloadPhenotypeDone } from '../../actions';
 import Modal from '../modal';
 import Phenotype from '../phenotype';
 
+import { SCREEN_SIZES } from '../../constants';
+
 const downloadUrl = (url, name) => {
   const link    = document.createElement('a');
   link.download = name;
@@ -16,14 +18,6 @@ const downloadUrl = (url, name) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-};
-
-const WIDTHS = {
-  [16/9]:  [ 1366, 1600, 1920, 2560 ],
-  [16/10]: [ 1440, 1680, 3840, 1920, 2560 ],
-  [4/3]:   [ 1024, 1400, 1600 ],
-  [9/16]:  [ 640, 750 ],
-  [3/4]:   [ 768, 1536 ]
 };
 
 const { round } = Math;
@@ -78,7 +72,7 @@ class DownloadRender extends Component {
       <div className='tc'>
         <select className='mb2' onChange={this.onSelectWidth}>
           {
-            WIDTHS[aspectRatio].map(width => (
+            SCREEN_SIZES[aspectRatio].map(width => (
               <option key={ width } value={ width }>
                 { width } x { round(width * (1 / aspectRatio)) }
               </option>
@@ -110,7 +104,8 @@ class DownloadRender extends Component {
         width={ selectedWidth }
         aspect={ aspectRatio }
         onSurfaceLoad={ this.onSurfaceLoad }
-        code={ download.get('code') }/>
+        code={ download.get('code') }
+        forceExactSize/>
     </div>;
   }
 }

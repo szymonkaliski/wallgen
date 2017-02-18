@@ -19,7 +19,6 @@ const store = createStore(appStore);
 const App = () => {
   return <div className='w-100'>
     <Navbar/>
-    <History/>
     <Population/>
     <DownloadRender/>
   </div>;
