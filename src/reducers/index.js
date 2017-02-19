@@ -2,13 +2,13 @@ import { fromJS } from 'immutable';
 
 import {
   createPopulation,
-  evolvePopulation,
   getGenotype
 } from '../genetic/population';
 
-import { POPULATION_SIZE, HISTORY_SIZE } from '../constants';
+import { POPULATION_SIZE } from '../constants';
 
 const initialState = fromJS({
+  evolving:    false,
   history:     [],
   download:    undefined,
   population:  createPopulation(POPULATION_SIZE),
@@ -16,14 +16,14 @@ const initialState = fromJS({
 });
 
 export default (state = initialState, action) => {
-  if (action.type === 'EVOLVE_GENOTYPE') {
-    state = state.update('history', history => history
-      .unshift(getGenotype(state.get('population'), action.id))
-      .setSize(Math.min(HISTORY_SIZE, history.count() + 1)));
+  if (action.type === 'EVOLVE_GENOTYPE_START') {
+    state = state.set('evolving', true);
+  }
 
-    state = state.set('population', evolvePopulation(
-      state.get('population'),
-      state.get('history')));
+  if (action.type === 'EVOLVE_GENOTYPE_DONE') {
+    state = state
+      .set('population', action.population)
+      .set('history', action.history);
   }
 
   if (action.type === 'DOWNLOAD_PHENOTYPE') {

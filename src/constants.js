@@ -1,8 +1,8 @@
 export const DISPLAY_PER_PAGE = 9;
-export const GENES_COUNT      = 6;
+export const GENES_COUNT      = 10;
 export const HISTORY_SIZE     = 3;
 export const MUTATION_CHANCE  = 0.001;
-export const POPULATION_SIZE  = DISPLAY_PER_PAGE * 200;
+export const POPULATION_SIZE  = DISPLAY_PER_PAGE * 100;
 
 export const ASPECT_RATIOS = [
   [ "4/3",   "desktop", 4/3   ],
