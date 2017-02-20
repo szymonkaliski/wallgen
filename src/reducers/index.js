@@ -23,7 +23,8 @@ export default (state = initialState, action) => {
   if (action.type === 'EVOLVE_GENOTYPE_DONE') {
     state = state
       .set('population', action.population)
-      .set('history', action.history);
+      .set('history', action.history)
+      .set('evolving', false);
   }
 
   if (action.type === 'DOWNLOAD_PHENOTYPE') {

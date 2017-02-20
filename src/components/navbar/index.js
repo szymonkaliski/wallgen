@@ -8,7 +8,7 @@ import { ASPECT_RATIOS } from '../../constants';
 
 const Navbar = ({ aspectRatio, setAspectRatio }) => {
   return <div className='w-100 light-gray bg-black-80 pa2 mb4'>
-    WallGen <span className='silver'>genetic wallpaper generator</span>
+    WallGen <span className='silver ml2'>evolutionary wallpaper generator</span>
 
     <div className='dib fr'>
       {

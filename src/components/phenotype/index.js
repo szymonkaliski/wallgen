@@ -77,7 +77,7 @@ class Phenotype extends Component {
 
   updateLoop() {
     const eps = 0.01;
-    const k   = 0.98;
+    const k   = 0.9;
 
     const code = this.state.code.map((v, i) => {
       const dist = abs(v - this.props.code.get(i));

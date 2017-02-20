@@ -11,6 +11,7 @@ import DownloadRender from './components/download-render';
 // import History from './components/history';
 import Navbar from './components/navbar';
 import Population from './components/population';
+import Preloader from './components/preloader';
 
 import 'tachyons/css/tachyons.css';
 import './index.css';
@@ -22,6 +23,7 @@ const App = () => {
     <Navbar/>
     <Population/>
     <DownloadRender/>
+    <Preloader/>
   </div>;
 };
 

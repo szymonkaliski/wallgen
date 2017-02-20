@@ -32,3 +32,15 @@ body {
 .bg-black-a80 {
   background-color: rgba(0, 0, 0, 0.8);
 }
+
+.transition--opacity {
+  transition: opacity 400ms;
+}
+
+.events--all {
+  pointer-events: all;
+}
+
+.events--none {
+  pointer-events: none;
+}

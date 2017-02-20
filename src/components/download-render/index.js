@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autobind from 'react-autobind';
+import last from 'lodash.last';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -54,13 +55,13 @@ class DownloadRender extends Component {
     this.setState({ shouldDownload: true });
   }
 
-  renderModal() {
+  renderModalContent() {
     const { download, aspectRatio } = this.props;
 
     // TODO: set nice width for preview image
     const width = 512;
 
-    return <Modal open onRequestClose={this.props.downloadPhenotypeDone}>
+    return <div>
       <div className='mb2'>
         <Phenotype
           width={ width }
@@ -70,7 +71,7 @@ class DownloadRender extends Component {
       </div>
 
       <div className='tc'>
-        <select className='mb2' onChange={this.onSelectWidth}>
+        <select className='mb2' onChange={ this.onSelectWidth } value={ last(SCREEN_SIZES[aspectRatio]) }>
           {
             SCREEN_SIZES[aspectRatio].map(width => (
               <option key={ width } value={ width }>
@@ -88,24 +89,39 @@ class DownloadRender extends Component {
           </div>
         </div>
       </div>
+    </div>;
+  }
+
+  renderModal() {
+    const { download } = this.props;
+
+    return <Modal open={ !!download } onRequestClose={ this.props.downloadPhenotypeDone }>
+      { download && this.renderModalContent() }
     </Modal>;
   }
 
+  renderPhenotype() {
+    const { download, aspectRatio } = this.props;
+    const { selectedWidth }         = this.state;
+
+    return <Phenotype
+      width={ selectedWidth }
+      aspect={ aspectRatio }
+      onSurfaceLoad={ this.onSurfaceLoad }
+      code={ download.get('code') }
+      forceExactSize/>;
+  }
+
   render() {
-    const { download, aspectRatio }         = this.props;
-    const { shouldDownload, selectedWidth } = this.state;
+    const { download }       = this.props;
+    const { shouldDownload } = this.state;
 
-    if (!download) { return null; }
+    return <div>
+      { this.renderModal() }
 
-    if (!shouldDownload) { return this.renderModal(); }
-
-    return <div className='invisible'>
-      <Phenotype
-        width={ selectedWidth }
-        aspect={ aspectRatio }
-        onSurfaceLoad={ this.onSurfaceLoad }
-        code={ download.get('code') }
-        forceExactSize/>
+      <div className='invisible'>
+        { shouldDownload && download && this.renderPhenotype() }
+      </div>
     </div>;
   }
 }
