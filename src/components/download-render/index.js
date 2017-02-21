@@ -21,7 +21,7 @@ const downloadUrl = (url, name) => {
   document.body.removeChild(link);
 };
 
-const { round } = Math;
+const { min, round } = Math;
 
 class DownloadRender extends Component {
   constructor() {
@@ -31,8 +31,30 @@ class DownloadRender extends Component {
 
     this.state = {
       shouldDownload: false,
-      selectedWidth:  undefined
+      downloadWidth:  undefined
     };
+  }
+
+  componentDidMount() {
+    this.onResize();
+
+    window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUmount() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      downloadWidth: last(SCREEN_SIZES[nextProps.aspectRatio])
+    });
+  }
+
+  onResize() {
+    this.setState({
+      width: 0.8 * min(window.innerWidth, window.innerHeight)
+    });
   }
 
   onSurfaceLoad(ref) {
@@ -41,28 +63,30 @@ class DownloadRender extends Component {
 
     downloadUrl(dataUrl, `wallgen-${download.get('id')}.png`);
 
-    this.setState({
-      shouldDownload: false,
-      selectedWidth:  undefined
-    }, this.props.downloadPhenotypeDone);
+    this.onClose();
   }
 
-  onSelectWidth(event) {
-    this.setState({ selectedWidth: event.target.value });
+  onSelectDownloadWidth(event) {
+    this.setState({ downloadWidth: event.target.value });
   }
 
   onClickDownload() {
     this.setState({ shouldDownload: true });
   }
 
+  onClose() {
+    this.setState({
+      shouldDownload: false,
+      downloadWidth:  undefined
+    }, this.props.downloadPhenotypeDone);
+  }
+
   renderModalContent() {
+    const { width, downloadWidth }  = this.state;
     const { download, aspectRatio } = this.props;
 
-    // TODO: set nice width for preview image
-    const width = 512;
-
     return <div>
-      <div className='mb2'>
+      <div className='mb2' onClick={ this.onClose }>
         <Phenotype
           width={ width }
           aspect={ aspectRatio }
@@ -71,7 +95,7 @@ class DownloadRender extends Component {
       </div>
 
       <div className='tc'>
-        <select className='mb2' onChange={ this.onSelectWidth } value={ last(SCREEN_SIZES[aspectRatio]) }>
+        <select className='mb2' onChange={ this.onSelectDownloadWidth } value={ downloadWidth }>
           {
             SCREEN_SIZES[aspectRatio].map(width => (
               <option key={ width } value={ width }>
@@ -84,7 +108,7 @@ class DownloadRender extends Component {
         <div className='tc'>
           <div
             onClick={ this.onClickDownload }
-            className='dib w-120px pa2 tc pointer bg-animate hover-white hover-bg-black ba border-box'>
+            className='dib w-120px pa2 tc pointer bg-animate hover-white hover-bg-gray ba b--gray border-box'>
             Download
           </div>
         </div>
@@ -95,21 +119,23 @@ class DownloadRender extends Component {
   renderModal() {
     const { download } = this.props;
 
-    return <Modal open={ !!download } onRequestClose={ this.props.downloadPhenotypeDone }>
+    return <Modal open={ !!download } onRequestClose={ this.onClose }>
       { download && this.renderModalContent() }
     </Modal>;
   }
 
   renderPhenotype() {
     const { download, aspectRatio } = this.props;
-    const { selectedWidth }         = this.state;
+    const { downloadWidth }         = this.state;
 
-    return <Phenotype
-      width={ selectedWidth }
-      aspect={ aspectRatio }
-      onSurfaceLoad={ this.onSurfaceLoad }
-      code={ download.get('code') }
-      forceExactSize/>;
+    return <div>
+      <Phenotype
+        width={ downloadWidth }
+        aspect={ aspectRatio }
+        onSurfaceLoad={ this.onSurfaceLoad }
+        code={ download.get('code') }
+        forceExactSize/>
+    </div>;
   }
 
   render() {
