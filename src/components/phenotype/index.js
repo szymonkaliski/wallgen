@@ -8,9 +8,9 @@ import { Surface } from 'gl-react-dom';
 
 import { GENES_COUNT } from '../../constants';
 
-const { abs, floor } = Math;
+const { abs, ceil } = Math;
 
-const calculateHeight = (width, aspect) => floor((1 / aspect) * width);
+const calculateHeight = (width, aspect) => ceil((1 / aspect) * width);
 
 const frag = `
   precision mediump float;
@@ -110,7 +110,7 @@ class Phenotype extends Component {
     const width = this.props.width || rect.width;
 
     this.setState({
-      width: floor(width)
+      width: ceil(width)
     });
   }
 

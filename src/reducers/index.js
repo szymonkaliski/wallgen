@@ -8,11 +8,12 @@ import {
 import { POPULATION_SIZE } from '../constants';
 
 const initialState = fromJS({
-  evolving:    false,
-  history:     [],
-  download:    undefined,
-  population:  createPopulation(POPULATION_SIZE),
-  aspectRatio: 16/9
+  evolving:       false,
+  history:        [],
+  historyVisible: false,
+  download:       undefined,
+  population:     createPopulation(POPULATION_SIZE),
+  aspectRatio:    16/9
 });
 
 export default (state = initialState, action) => {
@@ -28,7 +29,7 @@ export default (state = initialState, action) => {
   }
 
   if (action.type === 'DOWNLOAD_PHENOTYPE') {
-    state = state.set('download', getGenotype(state.get('population'), action.id));
+    state = state.set('download', getGenotype(state.get('population').concat(state.get('history')), action.id));
   }
 
   if (action.type === 'DOWNLOAD_PHENOTYPE_DONE') {
@@ -37,6 +38,10 @@ export default (state = initialState, action) => {
 
   if (action.type === 'SET_ASPECT_RATIO') {
     state = state.set('aspectRatio', action.aspectRatio);
+  }
+
+  if (action.type === 'TOGGLE_HISTORY_VISIBLE') {
+    state = state.update('historyVisible', historyVisible => !historyVisible);
   }
 
   return state;

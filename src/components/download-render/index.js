@@ -21,7 +21,7 @@ const downloadUrl = (url, name) => {
   document.body.removeChild(link);
 };
 
-const { min, round } = Math;
+const { min, ceil } = Math;
 
 class DownloadRender extends Component {
   constructor() {
@@ -99,7 +99,7 @@ class DownloadRender extends Component {
           {
             SCREEN_SIZES[aspectRatio].map(width => (
               <option key={ width } value={ width }>
-                { width } x { round(width * (1 / aspectRatio)) }
+                { width } x { ceil(width * (1 / aspectRatio)) }
               </option>
             ))
           }

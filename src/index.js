@@ -8,7 +8,7 @@ import { createStore, applyMiddleware } from 'redux';
 import appStore from './reducers';
 
 import DownloadRender from './components/download-render';
-// import History from './components/history';
+import History from './components/history';
 import Navbar from './components/navbar';
 import Population from './components/population';
 import Preloader from './components/preloader';
@@ -18,14 +18,13 @@ import './index.css';
 
 const store = createStore(appStore, applyMiddleware(thunk));
 
-const App = () => {
-  return <div className='w-100'>
-    <Navbar/>
-    <Population/>
-    <DownloadRender/>
-    <Preloader/>
-  </div>;
-};
+const App = () => <div className='w-100'>
+  <Navbar/>
+  <Population/>
+  <History/>
+  <DownloadRender/>
+  <Preloader/>
+</div>;
 
 ReactDOM.render(
   <Provider store={ store }>

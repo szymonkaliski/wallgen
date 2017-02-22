@@ -29,8 +29,8 @@ body {
   display: none;
 }
 
-.bg-black-a80 {
-  background-color: rgba(0, 0, 0, 0.8);
+.bg-black-a70 {
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .transition--opacity {
