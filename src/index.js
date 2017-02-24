@@ -9,6 +9,7 @@ import appStore from './reducers';
 
 import DownloadRender from './components/download-render';
 import History from './components/history';
+import Info from './components/info';
 import Navbar from './components/navbar';
 import Population from './components/population';
 import Preloader from './components/preloader';
@@ -24,6 +25,7 @@ const App = () => <div className='w-100'>
   <History/>
   <DownloadRender/>
   <Preloader/>
+  <Info/>
 </div>;
 
 ReactDOM.render(

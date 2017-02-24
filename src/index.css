@@ -20,17 +20,16 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* https://stackoverflow.com/questions/31109299/css-transform-translate-50-50-makes-texts-blurry */
 .absolute--center--children-fix {
-  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .invisible {
   display: none;
 }
 
-.bg-black-a70 {
-  background-color: rgba(0, 0, 0, 0.7);
+.bg-black-a85 {
+  background-color: rgba(0, 0, 0, 0.85);
 }
 
 .transition--opacity {

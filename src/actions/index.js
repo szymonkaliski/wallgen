@@ -54,3 +54,7 @@ export const setAspectRatio = (aspectRatio) => ({
 export const toggleHistoryVisible = () => ({
   type: 'TOGGLE_HISTORY_VISIBLE'
 });
+
+export const toggleInfoVisible = () => ({
+  type: 'TOGGLE_INFO_VISIBLE'
+});

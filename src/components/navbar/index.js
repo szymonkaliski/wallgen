@@ -2,11 +2,15 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { setAspectRatio, toggleHistoryVisible } from '../../actions';
+import {
+  setAspectRatio,
+  toggleHistoryVisible,
+  toggleInfoVisible
+} from '../../actions';
 
 import { ASPECT_RATIOS } from '../../constants';
 
-const Navbar = ({ aspectRatio, setAspectRatio, toggleHistoryVisible }) => {
+const Navbar = ({ aspectRatio, setAspectRatio, toggleHistoryVisible, toggleInfoVisible }) => {
   return <div className='w-100 light-gray bg-black-80 pa2 mb4'>
     WallGen <span className='silver ml1'>evolutionary wallpaper generator</span>
 
@@ -27,7 +31,7 @@ const Navbar = ({ aspectRatio, setAspectRatio, toggleHistoryVisible }) => {
         history
       </span>
 
-      <span className='ml3 pointer dim'>
+      <span className='ml3 pointer dim' onClick={ toggleInfoVisible }>
         info
       </span>
     </div>
@@ -39,8 +43,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  setAspectRatio,
   toggleHistoryVisible,
-  setAspectRatio
+  toggleInfoVisible
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

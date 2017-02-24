@@ -11,6 +11,7 @@ const initialState = fromJS({
   evolving:       false,
   history:        [],
   historyVisible: false,
+  infoVisible:    true,
   download:       undefined,
   population:     createPopulation(POPULATION_SIZE),
   aspectRatio:    16/9
@@ -42,6 +43,10 @@ export default (state = initialState, action) => {
 
   if (action.type === 'TOGGLE_HISTORY_VISIBLE') {
     state = state.update('historyVisible', historyVisible => !historyVisible);
+  }
+
+  if (action.type === 'TOGGLE_INFO_VISIBLE') {
+    state = state.update('infoVisible', infoVisible => !infoVisible);
   }
 
   return state;
