@@ -3,10 +3,7 @@ import autobind from 'react-autobind';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import {
-  downloadPhenotype,
-  evolveGenotype
-} from '../../actions';
+import { downloadPhenotype, evolveGenotype } from '../../actions';
 
 import Phenotype from '../phenotype';
 

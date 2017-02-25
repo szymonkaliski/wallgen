@@ -8,10 +8,10 @@ import {
 import { POPULATION_SIZE } from '../constants';
 
 const initialState = fromJS({
-  evolving:       false,
+  isEvolving:     false,
   history:        [],
   historyVisible: false,
-  infoVisible:    true,
+  infoVisible:    false,
   download:       undefined,
   population:     createPopulation(POPULATION_SIZE),
   aspectRatio:    16/9
@@ -19,14 +19,14 @@ const initialState = fromJS({
 
 export default (state = initialState, action) => {
   if (action.type === 'EVOLVE_GENOTYPE_START') {
-    state = state.set('evolving', true);
+    state = state.set('isEvolving', true);
   }
 
   if (action.type === 'EVOLVE_GENOTYPE_DONE') {
     state = state
       .set('population', action.population)
       .set('history', action.history)
-      .set('evolving', false);
+      .set('isEvolving', false);
   }
 
   if (action.type === 'DOWNLOAD_PHENOTYPE') {
