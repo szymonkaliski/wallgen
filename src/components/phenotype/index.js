@@ -15,6 +15,8 @@ const calculateHeight = (width, aspect) => ceil((1 / aspect) * width);
 const frag = `
   precision mediump float;
 
+  varying vec2 uv;
+
   uniform float width;
   uniform float height;
   uniform float code[${GENES_COUNT * 6}];
@@ -24,6 +26,10 @@ const frag = `
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+  }
+
+  float rand(vec2 co){
+    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
   }
 
   void main() {
@@ -47,7 +53,7 @@ const frag = `
       );
     }
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color, 1.0) + rand(uv) / 255.0;
   }
 `;
 
