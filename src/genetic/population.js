@@ -6,38 +6,39 @@ import { fromJS, List } from 'immutable';
 const { random } = randomSeed.create();
 
 const dist = (xs, ys) => {
-  return Math.sqrt(xs
-    .map((x, i) => Math.pow(x - ys.get(i), 2))
-    .reduce((acc, diff) => acc + diff, 0));
+  return Math.sqrt(xs.map((x, i) => Math.pow(x - ys.get(i), 2)).reduce((acc, diff) => acc + diff, 0));
 };
 
 const calculateFitness = (genotype, bestFits) => {
-  return bestFits
-    .map(bestFit => dist(bestFit.get('code'), genotype.get('code')))
-    .reduce((acc, dist) => acc + dist, 0) / bestFits.count();
+  return (
+    bestFits.map(bestFit => dist(bestFit.get('code'), genotype.get('code'))).reduce((acc, dist) => acc + dist, 0) /
+    bestFits.count()
+  );
 };
 
 const rouletteIdx = (normalizedFitnesses, sumFitnesses) => {
   const value = random() * sumFitnesses;
 
-  return normalizedFitnesses.reduce((acc, fitness, idx) => {
-    if (!acc.idx) {
-      const newValue = acc.value - fitness;
+  return normalizedFitnesses.reduce(
+    (acc, fitness, idx) => {
+      if (!acc.idx) {
+        const newValue = acc.value - fitness;
 
-      return {
-        value: newValue,
-        idx:   newValue <= 0 ? idx : acc.idx
-      };
-    }
-    else {
-      return acc;
-    }
-  }, { value, idx: undefined }).idx;
+        return {
+          value: newValue,
+          idx: newValue <= 0 ? idx : acc.idx
+        };
+      } else {
+        return acc;
+      }
+    },
+    { value, idx: undefined }
+  ).idx;
 };
 
-const prop = (key) => (obj) => obj.get(key);
+const prop = key => obj => obj.get(key);
 
-export const createPopulation = (populationSize) => {
+export const createPopulation = populationSize => {
   return fromJS(times(populationSize).map(() => createGenotype()));
 };
 
@@ -50,24 +51,23 @@ export const evolvePopulation = (inPopulation, history) => {
   });
 
   // normalize and sum fitnesses
-  const maxFitnesses        = Math.max(...population.map(prop('fitness')));
+  const maxFitnesses = Math.max(...population.map(prop('fitness')));
   const normalizedFitnesses = population.map(genotype => 1 - genotype.get('fitness') / maxFitnesses);
-  const sumFitnesses        = normalizedFitnesses.reduce((acc, fitness) => acc + fitness, 0);
+  const sumFitnesses = normalizedFitnesses.reduce((acc, fitness) => acc + fitness, 0);
 
   // roulette for new population
   while (newPopulation.count() < population.count()) {
     const parentAIdx = rouletteIdx(normalizedFitnesses, sumFitnesses);
     const parentBIdx = rouletteIdx(normalizedFitnesses, sumFitnesses);
 
-    const parentA    = population.get(parentAIdx);
-    const parentB    = population.get(parentBIdx);
+    const parentA = population.get(parentAIdx);
+    const parentB = population.get(parentBIdx);
 
     if (parentAIdx !== parentBIdx) {
       const child = mutate(crossover(parentA, parentB));
 
       newPopulation = newPopulation.push(child);
-    }
-    else {
+    } else {
       // in rare chance both random idxs are the same
       // just let the parent live for next iteration
       newPopulation = newPopulation.push(parentA);

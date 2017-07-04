@@ -21,48 +21,48 @@ import './index.css';
 
 const store = createStore(appStore, applyMiddleware(thunk));
 
-const App = ({
-  isEvolving,
-  historyVisible,
-  infoVisible,
-  toggleHistoryVisible,
-  toggleInfoVisible,
-}) => {
+const App = ({ isEvolving, historyVisible, infoVisible, toggleHistoryVisible, toggleInfoVisible }) => {
   const showModal = isEvolving || historyVisible || infoVisible;
 
   const onRequestClose = {
     [historyVisible]: toggleHistoryVisible,
-    [infoVisible]:    toggleInfoVisible
+    [infoVisible]: toggleInfoVisible
   }[true];
 
-  return <div className='w-100'>
-    <Navbar/>
-    <Population/>
-    <Modal open={ showModal } onRequestClose={ onRequestClose }>
-      { historyVisible && <History/> }
-      { isEvolving && <Preloader/> }
-      { infoVisible && <Info/> }
-    </Modal>
-    <DownloadRender/>
-  </div>;
+  return (
+    <div className="w-100">
+      <Navbar />
+      <Population />
+      <Modal open={showModal} onRequestClose={onRequestClose}>
+        {historyVisible && <History />}
+        {isEvolving && <Preloader />}
+        {infoVisible && <Info />}
+      </Modal>
+      <DownloadRender />
+    </div>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  isEvolving:     state.get('isEvolving'),
+const mapStateToProps = state => ({
+  isEvolving: state.get('isEvolving'),
   historyVisible: state.get('historyVisible'),
-  infoVisible:    state.get('infoVisible')
+  infoVisible: state.get('infoVisible')
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  toggleHistoryVisible,
-  toggleInfoVisible
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      toggleHistoryVisible,
+      toggleInfoVisible
+    },
+    dispatch
+  );
 
 const AppConnected = connect(mapStateToProps, mapDispatchToProps)(App);
 
 ReactDOM.render(
-  <Provider store={ store }>
-    <AppConnected/>
+  <Provider store={store}>
+    <AppConnected />
   </Provider>,
   document.getElementById('root')
 );

@@ -17,19 +17,24 @@ export default class Modal extends Component {
   render() {
     const { open, children } = this.props;
 
-    const stopEvent = (e) => {
+    const stopEvent = e => {
       e.preventDefault();
       e.stopPropagation();
-    }
+    };
 
-    return <div
-      className={ `fixed absolute--fill bg-black-a85 transition--opacity ${open ? 'o-100 events--all' : 'o-0 events--none'}` }
-      onClick={ this.onRequestClose }>
-      <div className='absolute--center light-gray' onClick={ stopEvent }>
-        <div className='absolute--center--children-fix'>
-          { open && children }
+    return (
+      <div
+        className={`fixed absolute--fill bg-black-a85 transition--opacity ${open
+          ? 'o-100 events--all'
+          : 'o-0 events--none'}`}
+        onClick={this.onRequestClose}
+      >
+        <div className="absolute--center light-gray" onClick={stopEvent}>
+          <div className="absolute--center--children-fix">
+            {open && children}
+          </div>
         </div>
       </div>
-    </div>;
+    );
   }
 }

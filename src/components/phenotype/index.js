@@ -10,7 +10,7 @@ import { GENES_COUNT } from '../../constants';
 
 const { abs, ceil } = Math;
 
-const calculateHeight = (width, aspect) => ceil((1 / aspect) * width);
+const calculateHeight = (width, aspect) => ceil(1 / aspect * width);
 
 const frag = `
   precision mediump float;
@@ -67,7 +67,7 @@ class Phenotype extends Component {
 
     this.state = {
       width: 0,
-      code:  props.code
+      code: props.code
     };
 
     this.onResize = debounce(this.onResize, 20);
@@ -83,7 +83,7 @@ class Phenotype extends Component {
 
   updateLoop() {
     const eps = 0.01;
-    const k   = 0.9;
+    const k = 0.9;
 
     const code = this.state.code.map((v, i) => {
       const dist = abs(v - this.props.code.get(i));
@@ -95,8 +95,7 @@ class Phenotype extends Component {
 
     if (!code.equals(this.props.code)) {
       this.rafHandle = raf(this.updateLoop);
-    }
-    else {
+    } else {
       raf.cancel(this.rafHandle);
       this.rafHandle = undefined;
     }
@@ -111,7 +110,9 @@ class Phenotype extends Component {
   onResize() {
     const rect = this.wrapperRef ? this.wrapperRef.getBoundingClientRect() : undefined;
 
-    if (!rect) { return; }
+    if (!rect) {
+      return;
+    }
 
     const width = this.props.width || rect.width;
 
@@ -137,47 +138,52 @@ class Phenotype extends Component {
 
   renderSurface() {
     const { aspect, forceExactSize } = this.props;
-    const { code, width }            = this.state;
+    const { code, width } = this.state;
 
     const height = calculateHeight(width, aspect);
 
-    let shaderWidth  = width;
+    let shaderWidth = width;
     let shaderHeight = height;
-    let paddingTop   = 0;
-    let paddingLeft  = 0;
+    let paddingTop = 0;
+    let paddingLeft = 0;
 
     if (!forceExactSize) {
-      shaderWidth  = aspect > 1 ? width : width * aspect;
+      shaderWidth = aspect > 1 ? width : width * aspect;
       shaderHeight = aspect > 1 ? height : width;
-      paddingLeft  = (width - shaderWidth) / 2;
-      paddingTop   = (width - shaderHeight) / 2;
+      paddingLeft = (width - shaderWidth) / 2;
+      paddingTop = (width - shaderHeight) / 2;
     }
 
-    return <div style={{ paddingLeft, paddingTop, width, height: forceExactSize ? height : width }}>
-      <Surface
-        width={ shaderWidth }
-        height={ shaderHeight }
-        webglContextAttributes={{ preserveDrawingBuffer: true }}
-        ref={ this.onSurfaceRef }
-        onLoad={ this.onSurfaceLoad }>
-        <Node
-          shader={ shaders.wall }
-          uniforms={{
-            width:  shaderWidth,
-            height: shaderHeight,
-            code:   code.toJS()
-          }}
-        />
-      </Surface>
-    </div>;
+    return (
+      <div style={{ paddingLeft, paddingTop, width, height: forceExactSize ? height : width }}>
+        <Surface
+          width={shaderWidth}
+          height={shaderHeight}
+          webglContextAttributes={{ preserveDrawingBuffer: true }}
+          ref={this.onSurfaceRef}
+          onLoad={this.onSurfaceLoad}
+        >
+          <Node
+            shader={shaders.wall}
+            uniforms={{
+              width: shaderWidth,
+              height: shaderHeight,
+              code: code.toJS()
+            }}
+          />
+        </Surface>
+      </div>
+    );
   }
 
   render() {
     const { width, code } = this.state;
 
-    return <div ref={ this.onWrapperRef }>
-      { code && width !== 0 && this.renderSurface() }
-    </div>;
+    return (
+      <div ref={this.onWrapperRef}>
+        {code && width !== 0 && this.renderSurface()}
+      </div>
+    );
   }
 }
 

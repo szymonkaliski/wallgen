@@ -1,20 +1,17 @@
 import { fromJS } from 'immutable';
 
-import {
-  createPopulation,
-  getGenotype
-} from '../genetic/population';
+import { createPopulation, getGenotype } from '../genetic/population';
 
 import { POPULATION_SIZE } from '../constants';
 
 const initialState = fromJS({
-  isEvolving:     false,
-  history:        [],
+  isEvolving: false,
+  history: [],
   historyVisible: false,
-  infoVisible:    false,
-  download:       undefined,
-  population:     createPopulation(POPULATION_SIZE),
-  aspectRatio:    16/9
+  infoVisible: false,
+  download: undefined,
+  population: createPopulation(POPULATION_SIZE),
+  aspectRatio: 16 / 9
 });
 
 export default (state = initialState, action) => {
@@ -23,10 +20,7 @@ export default (state = initialState, action) => {
   }
 
   if (action.type === 'EVOLVE_GENOTYPE_DONE') {
-    state = state
-      .set('population', action.population)
-      .set('history', action.history)
-      .set('isEvolving', false);
+    state = state.set('population', action.population).set('history', action.history).set('isEvolving', false);
   }
 
   if (action.type === 'DOWNLOAD_PHENOTYPE') {
@@ -50,4 +44,4 @@ export default (state = initialState, action) => {
   }
 
   return state;
-}
+};
